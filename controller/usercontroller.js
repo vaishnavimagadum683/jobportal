@@ -1,6 +1,6 @@
-import usermodel from '../model/usermodel.js';
-import bcrypt from 'bcryptjs'
-
+import usermodel from '../models/usermodel.js';
+import bcrypt, { hash } from 'bcryptjs'
+import nodemailer from 'nodemailer';
 export const register=async(req,res)=>{
     try {
         const {username,email,password}=req.body;
@@ -14,6 +14,29 @@ export const register=async(req,res)=>{
             return res.status(400).json({error:'user already exist'});
         }
         req.body.password=await bcrypt.hash(password,10);
+        try {
+                    let transporter=nodemailer.createTransport({
+                        service:'gmail',
+                        auth:{
+                            user:'yeddulajagadeesh11@gmail.com',
+                            pass:'ztpk mfgf vkfq zpfy'    
+                        }
+                    })
+        
+                    let mailinfo={
+                        from:'yeddulajagadeesh11@gmail.com',
+                        to:'jaggujagadesh85@gmail.com',
+                        subject:`register ${req.body.username}`,
+                        html:`
+                        <h1 style="color:red">hi man, you successfully registed Aishu job portal appiction and your username is ${req.body.username},your mail is ${req.body.email}</h1>
+                        
+                        `
+                    }
+        
+                    await transporter.sendMail(mailinfo);
+                } catch (error) {
+                    return res.status(500).json({error:'internal server error failed to sent mail'+error.message});
+                }
         let newuser=new usermodel(req.body);
         await newuser.save();
         return res.status(200).json({message:"user registered successfully",user:newuser});
@@ -37,7 +60,8 @@ export const login=async(req,res)=>{
         //if we are getting null means user not exist may be email is wrong  (!user)-->true
         //if user exist we will {username,email,password...}.  --false
         if(!user){
-             return res.status(400).json({error:'user not found'});
+
+           return res.status(400).json({error:'user not found'});
         }
 
         //step 4:check password
@@ -50,6 +74,72 @@ export const login=async(req,res)=>{
         
     } catch (error) {
         return res.status(500).json({error:'internal server error'+error.message});
- 
     }
+}
+
+export const getallusers=async (req,res)=>{
+    try {
+        let users=await usermodel.find().select('-password');
+        return res.status(200).json({message:"users fetched successfully",users:users})
+    } catch (error) {
+        return res.status(500).json({error:"internal server error"+error})
+    }
+}
+
+export const updateuser=async (req,res)=>{
+    try {
+           let id=req.params.id;
+           if(!id){
+            return res.status(400).json({error:'id is required'});
+           }
+           if(req.body.password){
+            req.body.password=await bcrypt.hash(req.body.password,10)
+           }
+          let updateduser= await usermodel.findByIdAndUpdate(id,req.body);//old data not exist means null
+          if(!updateduser){
+            return res.status(404).json({error:"user not found updated failed"})
+          }
+          return res.status(200).json({message:"user updated successfully",user:updateduser})
+    } catch (error) {
+          return res.status(500).json({error:"internal server error"+error})
+    }
+}
+
+export const forgotpassword=async (req,res)=>{
+    try {
+        let id=req.params.id;
+        if(!id){
+            return res.status(400).json({error:'id is required'});
+        }
+        let user=await usermodel.findById(id);
+        if(!user){
+            return res.status(404).json({error:"user not found"})
+        }
+        if(!req.body.password){
+            return res.status(400).json({error:'password is required'});
+        }
+        let hashedpassword=await bcrypt.hash(req.body.password,10);
+        let updateduser={...user,password:hashedpassword}
+        updateduser= await usermodel.findByIdAndUpdate(id,updateduser);//old data not exist means null
+        return res.status(200).json({message:"user updated successfully",user:updateduser})
+    } catch (error) {
+        return res.status(500).json({error:"internal server error"+error})
+    }
+}
+
+export const deleteuser=async(req,res)=>{
+   try {
+     const id=req.params.id;
+     if(!id){
+         return res.status(400).json({error:'id is required'});
+     }
+     let deleteduser=await usermodel.findByIdAndDelete(id);
+     if(!deleteduser){
+        return res.status(404).json({error:"user not found deleted failed"})
+     }
+
+     return res.status(200).json({message:"user deleted successfully",user:deleteduser})
+   } catch (error) {
+    
+   }
 }
