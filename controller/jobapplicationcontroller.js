@@ -29,14 +29,14 @@ export const applyjob=async(req,res)=>{
             let transporter=nodemailer.createTransport({
                 service:'gmail',
                 auth:{
-                    user:'yeddulajagadeesh11@gmail.com',
-                    pass:'ztpk mfgf vkfq zpfy'    
+                    user:'vaishnavimagadum683@gmail.com',
+                    pass:'whra bbxe Iqcn knvp'    
                 }
             })
 
             let mailinfo={
-                from:'yeddulajagadeesh11@gmail.com',
-                to:user.email,
+                from:'vaishnavimagadum683@gmail.com',
+                to:'asifnadaf962005@gmail.com',
                 subject:`job applied ${job.title}`,
                 html:`
                 <h1 style="color:yellow">${job.title}</h1>

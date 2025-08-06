@@ -1,7 +1,7 @@
 // utils/geminiClient.js
 import axios from 'axios';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyCfy03dqAlhv7WvYTGwG1-xwjnK_vcqxHw";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyC9XTF8Xgnzl5w_0dsZyO4dCl4aapsFZig";
 // utils/geminiClient.js
 
 // Updated API URL with correct model name
@@ -43,3 +43,6 @@ export const generateFromansgemini = async (prompt) => {
     throw new Error('Failed to generate content from Gemini API');
   }
 };
+
+
+

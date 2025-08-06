@@ -18,14 +18,14 @@ export const register=async(req,res)=>{
                     let transporter=nodemailer.createTransport({
                         service:'gmail',
                         auth:{
-                            user:'yeddulajagadeesh11@gmail.com',
-                            pass:'ztpk mfgf vkfq zpfy'    
+                            user:'vaishnavimagadum683@gmail.com',
+                            pass:'whra bbxe Iqcn knvp'    
                         }
                     })
         
                     let mailinfo={
-                        from:'yeddulajagadeesh11@gmail.com',
-                        to:'jaggujagadesh85@gmail.com',
+                        from:'vaishnavimagadum683@gmail.com',
+                        to:'asifnadaf962005@gmail.com',
                         subject:`register ${req.body.username}`,
                         html:`
                         <h1 style="color:red">hi man, you successfully registed Aishu job portal appiction and your username is ${req.body.username},your mail is ${req.body.email}</h1>

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import jobmodel from "../models/jobsmodel.js";
 import usermodel from "../models/usermodel.js";
+import { fetchProcessAndStoreJobs } from '../services/services.js';  // ✅ match actual file
+
 
 export const postjob=async(req,res)=>{
     try {
